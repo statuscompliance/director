@@ -24,7 +24,7 @@
   "keywords": [
     "OAI"
   ],
-  "license": "Unlicense",
+  "license": "ISC",
   "private": true,
   "dependencies": {
     "axios": "^0.21.0",
@@ -36,5 +36,16 @@
     "oas-tools": "^2.1.4",
     "require-from-string": "^2.0.2",
     "uuid": "^8.3.1"
+  },
+  "author": {
+    "name": "ISA group",
+    "web": "http://www.isa.us.es/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/governify/director"
+  },
+  "docker": {
+    "url": "https://hub.docker.com/r/governify/director"
   }
 }

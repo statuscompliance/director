@@ -1,14 +1,14 @@
 'use strict';
 
-var fs = require('fs'),
-    http = require('http'),
-    path = require('path');
+var fs = require('fs');
+var http = require('http');
+var path = require('path');
 
-var express = require("express");
-var cors = require('cors')
+var express = require('express');
+var cors = require('cors');
 var app = express();
 var bodyParser = require('body-parser');
-const taskExecutor = require('./controllers/taskExecutor')
+const taskExecutor = require('./controllers/taskExecutor');
 app.use(bodyParser.json({
   strict: false
 }));
@@ -16,12 +16,12 @@ app.use(bodyParser.json({
 app.use(cors());
 var oasTools = require('oas-tools');
 var jsyaml = require('js-yaml');
-var serverPort = 80;
+var serverPort = 8080;
 
 var spec = fs.readFileSync(path.join(__dirname, '/api/oas-doc.yaml'), 'utf8');
 var oasDoc = jsyaml.safeLoad(spec);
 
-var options_object = {
+var optionsObject = {
   controllers: path.join(__dirname, './controllers'),
   loglevel: 'info',
   strict: false,
@@ -29,25 +29,25 @@ var options_object = {
   validator: true
 };
 
-oasTools.configure(options_object);
+oasTools.configure(optionsObject);
 
-oasTools.initialize(oasDoc, app, function() {
-  http.createServer(app).listen(serverPort, function() {
-    console.log("App running at http://localhost:" + serverPort);
-    console.log("________________________________________________________________");
-    if (options_object.docs !== false) {
+oasTools.initialize(oasDoc, app, function () {
+  http.createServer(app).listen(serverPort, function () {
+    console.log('App running at http://localhost:' + serverPort);
+    console.log('________________________________________________________________');
+    if (optionsObject.docs !== false) {
       console.log('API docs (Swagger UI) available on http://localhost:' + serverPort + '/docs');
-      console.log("________________________________________________________________");
+      console.log('________________________________________________________________');
     }
   });
 });
 
-app.get('/info', function(req, res) {
+app.get('/info', function (req, res) {
   res.send({
-    info: "This API was generated using oas-generator!",
+    info: 'This API was generated using oas-generator!',
     name: oasDoc.info.title
   });
 });
 
-console.log('Starting task executor')
+console.log('Starting task executor');
 taskExecutor.startExecutor();

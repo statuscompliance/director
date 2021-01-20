@@ -4,6 +4,7 @@ node_modules/
 public/coverage/
 public/docs/
 logs/
+tasks/*
 
 # Coverage directory used by tools like istanbul
 coverage

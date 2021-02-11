@@ -2,91 +2,106 @@ const filemanager = require('../filemanager');
 // const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
 var requireFromString = require('require-from-string');
-var programmedExecutions = {};
+var programmedTasks = {};
+
+module.exports.runTask = runTask;
+module.exports.runScript = runScript;
 
 module.exports.startExecutor = async function () {
-  setInterval(programNextExecutions, 3000);
+  setInterval(programNextTasks, 3000);
 };
 
-module.exports.getProgrammedExecutions = function () {
-  return programmedExecutions;
+module.exports.getProgrammedTasks = function () {
+  return programmedTasks;
 };
 
-async function programNextExecutions () {
+async function programNextTasks() {
   const currentTime = new Date().getTime();
   const maxTimeProgram = currentTime + 10000;
 
   var files = await filemanager.readFiles();
 
   // Programmed Task Object cleanup
-  var executionListId = files.map(x => x.id);
-  var programmedListId = Object.keys(programmedExecutions);
-  var toDelete = programmedListId.filter(id => { return !executionListId.includes(id); });
-  var toCreate = executionListId.filter(id => { return !programmedListId.includes(id); });
-  toDelete.forEach(id => delete programmedExecutions[id]);
-  toCreate.forEach(id => { programmedExecutions[id] = {}; });
+  var taskListId = files.map(x => x.id);
+  var programmedListId = Object.keys(programmedTasks);
+  var toDelete = programmedListId.filter(id => { return !taskListId.includes(id); });
+  var toCreate = taskListId.filter(id => { return !programmedListId.includes(id); });
+  toDelete.forEach(id => delete programmedTasks[id]);
+  toCreate.forEach(id => { programmedTasks[id] = {}; });
 
-  // Iteration for all execution files
-  files.filter(execution => { return execution.running; }).forEach(execution => {
-    var initTime = new Date(execution.init).getTime();
-    var endTime = new Date(execution.end).getTime();
+  // Iteration for all task files
+  files.filter(task => { return task.running; }).forEach(task => {
+    var initTime = new Date(task.init).getTime();
+    var endTime = new Date(task.end).getTime();
 
     if (currentTime > endTime) {
-      filemanager.deleteTaskFile(execution.id);
+      filemanager.deleteTaskFile(task.id);
     } else {
       var realInitTime = initTime;
       // Remove old period if time init is past for optimization
       if (initTime < currentTime) {
-        realInitTime = currentTime - (currentTime - initTime) % execution.interval;
+        realInitTime = currentTime - (currentTime - initTime) % task.interval;
       }
-      var nextExecutionDates = [];
+      var nextTaskDates = [];
       var currentTimeCalculation = realInitTime;
       while (maxTimeProgram > currentTimeCalculation && endTime > currentTimeCalculation) {
-        if (currentTimeCalculation > currentTime && !programmedExecutions[execution.id][currentTimeCalculation]) {
-          nextExecutionDates.push(currentTimeCalculation);
+        if (currentTimeCalculation > currentTime && !programmedTasks[task.id][currentTimeCalculation]) {
+          nextTaskDates.push(currentTimeCalculation);
         }
-        currentTimeCalculation += execution.interval;
+        currentTimeCalculation += task.interval;
       }
 
-      nextExecutionDates.forEach(time => {
+      nextTaskDates.forEach(time => {
         var scheduledFunction = function () {
-          if (execution) {
-            delete programmedExecutions[execution.id][time];
-            executeFile(execution);
+          if (task) {
+            delete programmedTasks[task.id][time];
+            runTask(task);
           } else {
-            console.log('Execution canceled because it was deleted.');
+            console.log('Task canceled because it was deleted.');
           }
         };
 
         setTimeout(scheduledFunction, time - currentTime);
-        programmedExecutions[execution.id][time] = { timer: 'id' };
+        programmedTasks[task.id][time] = { timer: 'id' };
       });
     }
   });
-  console.log(programmedExecutions);
+  console.log(programmedTasks);
 }
 
-function executeFile (execution) {
-  axios({
-    url: execution.script,
-    method: 'GET',
-    headers: { 'User-Agent': 'request' },
-    transformResponse: function (response) {
-      // do not convert the response to JSON or object
-      return response;
-    }
-  }).then(response => {
-    var module = requireFromString(response.data);
-    module.main(execution.config);
-  }).catch(err => {
+
+//Run a specific tasktask
+async function runTask(task) {
+  try {
+    let scriptFile = await axios({
+      url: task.script,
+      method: 'GET',
+      headers: { 'User-Agent': 'request' },
+      transformResponse: function (response) {
+        // do not convert the response to JSON or object
+        return response;
+      }
+    })
+    await runScript(scriptFile.data, task.config, task.id)
+  } catch (err) {
     console.error(err);
     throw Error('Error obtaining: ' + URL);
-  });
+  };
 }
 
-// function requireFromString(src, filename) {
-//     var Module = module.constructor;
-//     var m = new Module();
-//     m._compile(src, filename);
-//     return m.exports;
-// }
+// Run raw JS file with a specific configuration. 
+async function runScript(scriptText, config, scriptInfo) {
+  let scriptResponse;
+  try {
+
+    var module = requireFromString(scriptText);
+
+    scriptResponse = await module.main(config);
+    
+   
+  } catch (error) {
+    scriptResponse = 'Error running script: ' + JSON.stringify(scriptInfo) + '\n' + 'Script config: ' + JSON.stringify(config);
+    throw Error(scriptResponse);
+  }
+  return scriptResponse;
+}

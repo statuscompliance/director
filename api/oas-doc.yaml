@@ -100,6 +100,55 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/errorModel'
+  '/api/v1/tasks/{id}/run':
+    post:
+      description: Makes one execution of a task by id
+      operationId: runTaskByid
+      parameters:
+        - name: id
+          in: path
+          description: id of task to run
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Task returned
+          content:
+            application/json:
+              schema:
+                type: object
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorModel'
+  '/api/v1/tasks/test':
+    post:
+      description: Makes one execution of a task by the script JS.
+      operationId: runTaskTest
+      requestBody:
+        description: Script text and config
+        x-name: testBody
+        required: true
+        content:
+          application/json:
+              schema:
+                type: object
+      responses:
+        '200':
+          description: Execution response returned
+          content:
+            application/json:
+              schema:
+                type: object
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorModel'
   '/api/v1/tasks/{id}/status/{action}':
     post:
       description: Update a task status by id

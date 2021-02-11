@@ -1,6 +1,6 @@
 'use strict';
 
-var varapiv1tasksController = require('./apiv1tasksControllerService');
+const varapiv1tasksController = require('./apiv1tasksControllerService');
 
 module.exports.gettasks = function getTasks (req, res, next) {
   varapiv1tasksController.getTasks(req, res, next);

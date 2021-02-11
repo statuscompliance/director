@@ -1,8 +1,8 @@
-var fs = require('fs');
+const fs = require('fs');
 const fsPromises = fs.promises;
 const mustache = require('mustache');
 mustache.escape = function (text) { return text; };
-var taskFolder = 'tasks';
+const taskFolder = 'tasks';
 
 module.exports.updateTask = async function updateTask (task) {
   await this.deleteTaskFile(task.id);
@@ -14,11 +14,11 @@ module.exports.readFiles = async function readFiles (parsed) {
 };
 
 module.exports.readFilesMap = async function readFilesMap (parsed) {
-  var objects = {};
-  var filenames = await fsPromises.readdir(taskFolder);
+  const objects = {};
+  const filenames = await fsPromises.readdir(taskFolder);
   for (const filename of filenames) {
-    var fileContent = await fsPromises.readFile(taskFolder + '/' + filename, 'utf-8');
-    var jsonObject;
+    const fileContent = await fsPromises.readFile(taskFolder + '/' + filename, 'utf-8');
+    let jsonObject;
     if (parsed) {
       jsonObject = JSON.parse(mustache.render(fileContent, process.env, {}, ['$_[', ']']));
     } else {
@@ -31,10 +31,10 @@ module.exports.readFilesMap = async function readFilesMap (parsed) {
 };
 
 module.exports.deleteTaskFile = async function deleteTaskFile (id) {
-  var tasksFileMap = await this.readFilesMap();
-  for (var taskFileName in tasksFileMap) {
+  const tasksFileMap = await this.readFilesMap();
+  for (const taskFileName in tasksFileMap) {
     if (tasksFileMap[taskFileName].id === id) {
-      var deletedFilePath = taskFolder + '/' + taskFileName;
+      const deletedFilePath = taskFolder + '/' + taskFileName;
       console.log('Deleting task file:' + deletedFilePath);
       fs.unlinkSync(deletedFilePath);
       return;

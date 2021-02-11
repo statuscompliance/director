@@ -1,9 +1,9 @@
 'use strict';
-var utils = require('./utils');
-var taskExecutor = require('./taskExecutor');
+const utils = require('./utils');
+const taskExecutor = require('./taskExecutor');
 
 module.exports.findTaskStatusByid = async function findTaskStatusByid (req, res, next) {
-  var task = await utils.getTaskById(req.id.value);
+  const task = await utils.getTaskById(req.id.value);
   if (!task) {
     res.status(404).send({
       code: 404,
@@ -12,7 +12,7 @@ module.exports.findTaskStatusByid = async function findTaskStatusByid (req, res,
     return;
   }
 
-  var response = {
+  const response = {
     id: req.id.value,
     running: true,
     nextExecution: Object.keys(taskExecutor.getProgrammedExecutions()[req.id.value])?.[0]

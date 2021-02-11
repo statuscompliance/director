@@ -1,9 +1,9 @@
 'use strict';
-var utils = require('./utils');
-var filemanager = require('./filemanager');
+const utils = require('./utils');
+const filemanager = require('./filemanager');
 
 module.exports.updateTaskAction = async function updateTaskAction (req, res, next) {
-  var task = await utils.getTaskById(req.id.value);
+  const task = await utils.getTaskById(req.id.value);
   if (!task) {
     res.status(404).send({
       code: 404,

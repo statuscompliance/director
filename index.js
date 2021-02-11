@@ -1,27 +1,27 @@
 'use strict';
 
-var fs = require('fs');
-var http = require('http');
-var path = require('path');
+const fs = require('fs');
+const http = require('http');
+const path = require('path');
 
-var express = require('express');
-var cors = require('cors');
-var app = express();
-var bodyParser = require('body-parser');
+const express = require('express');
+const cors = require('cors');
+const app = express();
+const bodyParser = require('body-parser');
 const taskExecutor = require('./controllers/taskExecutor');
 app.use(bodyParser.json({
   strict: false
 }));
 
 app.use(cors());
-var oasTools = require('oas-tools');
-var jsyaml = require('js-yaml');
-var serverPort = 8080;
+const oasTools = require('oas-tools');
+const jsyaml = require('js-yaml');
+const serverPort = 8080;
 
-var spec = fs.readFileSync(path.join(__dirname, '/api/oas-doc.yaml'), 'utf8');
-var oasDoc = jsyaml.safeLoad(spec);
+const spec = fs.readFileSync(path.join(__dirname, '/api/oas-doc.yaml'), 'utf8');
+const oasDoc = jsyaml.safeLoad(spec);
 
-var optionsObject = {
+const optionsObject = {
   controllers: path.join(__dirname, './controllers'),
   loglevel: 'info',
   strict: false,

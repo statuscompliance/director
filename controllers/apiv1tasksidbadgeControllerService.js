@@ -1,9 +1,9 @@
 'use strict';
-var utils = require('./utils');
-var path = require('path');
+const utils = require('./utils');
+const path = require('path');
 
 module.exports.findTaskBadgeByid = async function findTaskBadgeByid (req, res, next) {
-  var task = await utils.getTaskById(req.id.value);
+  const task = await utils.getTaskById(req.id.value);
   if (!task) {
     res.status(404).send({
       code: 404,
@@ -11,7 +11,7 @@ module.exports.findTaskBadgeByid = async function findTaskBadgeByid (req, res, n
     });
     return;
   }
-  var imgPath = 'badges/stopped.svg';
+  let imgPath = 'badges/stopped.svg';
   if (task.running) {
     imgPath = 'badges/running.svg';
   }

@@ -1,6 +1,6 @@
 'use strict';
 
-var varapiv1tasksidController = require('./apiv1tasksidControllerService');
+const varapiv1tasksidController = require('./apiv1tasksidControllerService');
 
 module.exports.findTaskByid = function findTaskByid (req, res, next) {
   varapiv1tasksidController.findTaskByid(req.swagger.params, res, next);

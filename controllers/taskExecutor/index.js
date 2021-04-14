@@ -1,7 +1,8 @@
 const filemanager = require('../filemanager');
 // const { v4: uuidv4 } = require('uuid');
-const axios = require('axios');
 const requireFromString = require('require-from-string');
+const governify = require('governify-commons');
+
 const programmedTasks = {};
 
 module.exports.runTask = runTask;
@@ -72,7 +73,7 @@ async function programNextTasks () {
 // Run a specific tasktask
 async function runTask (task) {
   try {
-    const scriptFile = await axios({
+    const scriptFile = await governify.httpClient({
       url: task.script,
       method: 'GET',
       headers: { 'User-Agent': 'request' },

@@ -1,5 +1,5 @@
 'use strict';
-const deploy = (env) => {
+const deploy = (env, commonsMiddleware) => {
   return new Promise((resolve, reject) => {
     try {
       const fs = require('fs');
@@ -16,6 +16,7 @@ const deploy = (env) => {
       }));
 
       app.use(cors());
+      app.use('/commons', commonsMiddleware)
       const oasTools = require('oas-tools');
       const jsyaml = require('js-yaml');
       const serverPort = process.env.PORT || 5800;

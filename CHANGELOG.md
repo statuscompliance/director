@@ -1,4 +1,18 @@
-# 1.1.0 (2021-01-20)
+# [1.2.0](https://github.com/governify/director/compare/v1.1.0...v1.2.0) (2021-03-19)
+
+
+### Bug Fixes
+
+* Linting ([c60be45](https://github.com/governify/director/commit/c60be45141cdbe600c0fc5d8249a18e7393ca995))
+
+
+### Features
+
+* Adding run and test methods ([97bc650](https://github.com/governify/director/commit/97bc65001d5064d51d1d5b66717840e4c8d965b6))
+
+
+
+# [1.1.0](https://github.com/governify/director/compare/bb201d168a0dfc70f6ccf55c6e7bc388809816fd...v1.1.0) (2021-01-20)
 
 
 ### Features

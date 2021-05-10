@@ -1,3 +1,23 @@
+# [1.3.0](https://github.com/governify/director/compare/v1.2.0...v1.3.0) (2021-05-10)
+
+
+### Bug Fixes
+
+* e2e pipeline ([b987124](https://github.com/governify/director/commit/b98712477fbdf536a7b412d887bc7f47e67ac713))
+* linting ([3fb5203](https://github.com/governify/director/commit/3fb520358585114399a5f4f7c4142c4ad24d540a))
+* local infrastructure ([d733197](https://github.com/governify/director/commit/d733197e2945bdc1f310200eabbd831e19a314d5))
+* Package name ([6f525c1](https://github.com/governify/director/commit/6f525c118654aadc18328114eaddf1a65a8e1904))
+
+
+### Features
+
+* Implementing new commons ([44a79dd](https://github.com/governify/director/commit/44a79dd90216da2f0c323742c62005594028c714))
+* replaced axios and port with commons ([08e03db](https://github.com/governify/director/commit/08e03db3220ca6bf0b380ffe10fe73466d27db6f))
+* update commons ([b7e79da](https://github.com/governify/director/commit/b7e79da559975cfbe1a9de7357b73e9ed1ad8820))
+* updated governify-commons ([39b9778](https://github.com/governify/director/commit/39b9778a8cf18fe49bed732a734819ef3d7f8a81))
+
+
+
 # [1.2.0](https://github.com/governify/director/compare/v1.1.0...v1.2.0) (2021-03-19)
 
 

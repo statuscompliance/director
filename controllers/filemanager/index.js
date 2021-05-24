@@ -17,7 +17,7 @@ module.exports.readFilesMap = async function readFilesMap (parsed) {
   const objects = {};
   const filenames = await fsPromises.readdir(taskFolder);
   for (const filename of filenames) {
-    if (filename.endsWith('.json')){
+    if (filename.endsWith('.json')) {
       const fileContent = await fsPromises.readFile(taskFolder + '/' + filename, 'utf-8');
       let jsonObject;
       if (parsed) {

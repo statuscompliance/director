@@ -17,14 +17,16 @@ module.exports.readFilesMap = async function readFilesMap (parsed) {
   const objects = {};
   const filenames = await fsPromises.readdir(taskFolder);
   for (const filename of filenames) {
-    const fileContent = await fsPromises.readFile(taskFolder + '/' + filename, 'utf-8');
-    let jsonObject;
-    if (parsed) {
-      jsonObject = JSON.parse(mustache.render(fileContent, process.env, {}, ['$_[', ']']));
-    } else {
-      jsonObject = JSON.parse(fileContent);
+    if (filename.endsWith('.json')){
+      const fileContent = await fsPromises.readFile(taskFolder + '/' + filename, 'utf-8');
+      let jsonObject;
+      if (parsed) {
+        jsonObject = JSON.parse(mustache.render(fileContent, process.env, {}, ['$_[', ']']));
+      } else {
+        jsonObject = JSON.parse(fileContent);
+      }
+      objects[filename] = jsonObject;
     }
-    objects[filename] = jsonObject;
   }
 
   return objects;

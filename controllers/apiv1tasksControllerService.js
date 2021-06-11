@@ -2,16 +2,17 @@
 const filemanager = require('./filemanager');
 const utils = require('./utils');
 const { v4: uuidv4 } = require('uuid');
+const logger = require('governify-commons').getLogger().tag('controller-tasks');
 
 module.exports.getTasks = async function getTasks (req, res, next) {
-  console.log(req.query);
+  logger.info(req.query);
   const tasks = await utils.getTasksByData(req.query);
-  console.log('Returning tasks list');
+  logger.info('Returning tasks list');
   res.send(tasks);
 };
 
 module.exports.addTask = async function addTask (req, res, next) {
-  console.log(req.task.value);
+  logger.info(req.task.value);
   const tasks = await utils.getTasksByData(req.task.value);
   if (tasks.length > 0) {
     res.status(400).send({

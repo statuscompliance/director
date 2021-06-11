@@ -3,6 +3,7 @@ const fsPromises = fs.promises;
 const mustache = require('mustache');
 mustache.escape = function (text) { return text; };
 const taskFolder = 'tasks';
+const logger = require('governify-commons').getLogger().tag('file-manager');
 
 module.exports.updateTask = async function updateTask (task) {
   await this.deleteTaskFile(task.id);
@@ -37,7 +38,7 @@ module.exports.deleteTaskFile = async function deleteTaskFile (id) {
   for (const taskFileName in tasksFileMap) {
     if (tasksFileMap[taskFileName].id === id) {
       const deletedFilePath = taskFolder + '/' + taskFileName;
-      console.log('Deleting task file:' + deletedFilePath);
+      logger.info('Deleting task file:' + deletedFilePath);
       fs.unlinkSync(deletedFilePath);
       return;
     }
@@ -47,7 +48,7 @@ module.exports.deleteTaskFile = async function deleteTaskFile (id) {
 module.exports.addTaskFile = async function addTaskFile (task) {
   fs.writeFile(taskFolder + '/' + task.id + '.json', JSON.stringify(task, null, 2), function (err) {
     if (err) {
-      console.log(err);
+      logger.error(err);
     }
   });
 };

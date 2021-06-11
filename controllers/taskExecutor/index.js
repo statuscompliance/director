@@ -2,6 +2,7 @@ const filemanager = require('../filemanager');
 // const { v4: uuidv4 } = require('uuid');
 const requireFromString = require('require-from-string');
 const governify = require('governify-commons');
+const logger = governify.getLogger().tag('task-executor');
 
 const programmedTasks = {};
 
@@ -58,7 +59,7 @@ async function programNextTasks () {
             delete programmedTasks[task.id][time];
             runTask(task);
           } else {
-            console.log('Task canceled because it was deleted.');
+            logger.info('Task canceled because it was deleted.');
           }
         };
 
@@ -67,7 +68,7 @@ async function programNextTasks () {
       });
     }
   });
-  console.log(programmedTasks);
+  logger.info(programmedTasks);
 }
 
 // Run a specific tasktask

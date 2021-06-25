@@ -41,7 +41,7 @@ module.exports.updateTask = async function updateTask (req, res, next) {
     return;
   }
   await filemanager.deleteTaskFile(req.id.value);
-  const newTask = req.value.task;
+  const newTask = req.task.value;
   await filemanager.addTaskFile(newTask);
   res.send({
     code: 201,

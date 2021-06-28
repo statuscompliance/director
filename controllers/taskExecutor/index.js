@@ -83,7 +83,7 @@ async function runTask (task) {
         return response;
       }
     });
-    await runScript(scriptFile.data, task.config, task.id);
+    return await runScript(scriptFile.data, task.config, task.id);
   } catch (err) {
     console.error(err);
     throw Error('Error obtaining: ' + URL);

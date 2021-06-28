@@ -23,9 +23,14 @@ module.exports.deleteTask = async function deleteTask (req, res, next) {
     });
     return;
   }
-  filemanager.deleteTaskFile(req.id.value);
+  await filemanager.deleteTaskFile(req.id.value).catch(err => {
+    res.status(500).send({
+      code: 500,
+      message: 'Error when deleting task' + err
+    });
+  });
 
-  res.send({
+  res.status(202).send({
     code: 202,
     message: 'Deleted'
   });

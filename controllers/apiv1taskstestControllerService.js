@@ -10,6 +10,5 @@ module.exports.runTaskTest = async function runTaskTest (req, res, next) {
     res.status(200).send(scriptResponse);
   } catch (err) {
     res.status(500).send(err);
-    throw Error(err);
   }
 };

@@ -20,15 +20,18 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.3",
+    "fs": "0.0.1-security",
     "governify-commons": "^1.13.0",
     "js-yaml": "^3.3.0",
     "mustache": "^4.0.1",
     "oas-tools": "^2.1.4",
     "require-from-string": "^2.0.2",
+    "sinon": "^11.1.1",
     "uuid": "^8.3.1"
   },
   "devDependencies": {
-    "mocha": "^7.1.1",
+    "mocha": "^7.2.0",
+    "nock": "^13.1.0",
     "nyc": "^15.0.0",
     "semistandard": "^14.2.0"
   },

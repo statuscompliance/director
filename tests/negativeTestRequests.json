@@ -136,6 +136,18 @@
         }
     },
     {
+        "name":"Bad Script Run Task",
+        "body": {
+            "id": "123132",
+            "script": "http://localhost:5200/api/v1/tasks/badRun.js",
+            "running": false,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        }
+    },
+    {
         "name":"Test Task",
         "body": {
             "scriptText":"badScript",

@@ -9,17 +9,13 @@ const nockController = require('./nockController');
 
 const serverUrl = "http://localhost:5800";
 
-// For skipping tests in case of failure
-const skip = [];
-const keep = [];
-
 describe('Testing', function () {
   before((done) => {
     governify.init().then((commonsMiddleware) => {
       server.deploy('test', commonsMiddleware).then(() => {
         governify.httpClient.setRequestLogging(false);
         nockController.instantiateMockups('test').then(() => {
-          //sinon.stub(console, "log");
+          sinon.stub(console);
           done();
         }).catch(err2 => {
           console.log(err2.message);
@@ -104,12 +100,12 @@ describe('Testing', function () {
 function apiRestPositiveGetTestRequest() {
   const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
   for (const testRequest of testRequests) {
-    if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.name === 'GET all tasks') {
+    if ( testRequest.name === 'GET all tasks') {
       it('should respond with 200 OK on GET (' + testRequest.name + ')', function (done) {
         try {
           governify.httpClient.get(serverUrl + '/api/v1/tasks').then(response => {
             assert.strictEqual(response.status, 200);
-            assert.notStrictEqual(response.data, undefined);
+            assert.strictEqual(JSON.stringify(response.data), JSON.stringify(testRequest.response));
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -120,13 +116,12 @@ function apiRestPositiveGetTestRequest() {
       });
     }
   }
-  
 }
 
 function apiRestPositivePostGetDeleteTaskTestRequest() {
   const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
   for (const testRequest of testRequests) {
-    if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.name === 'POST task') {
+    if ( testRequest.name === 'POST task') {
       it('should respond with 200 OK on POST (' + testRequest.name + ')', function (done) {
         try {
           const options = {
@@ -139,6 +134,7 @@ function apiRestPositivePostGetDeleteTaskTestRequest() {
           }
           governify.httpClient.request(options).then(response => {
             assert.strictEqual(response.status, 200);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),true);
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -148,10 +144,11 @@ function apiRestPositivePostGetDeleteTaskTestRequest() {
         }
       });
 
-      it('should respond with 200 OK on GET Task created with (' + testRequest.name + ')', function (done) {
+      it('should respond with 200 OK on GET Task created with (' + testRequest.name + ') and response data should be correct', function (done) {
         try {
           governify.httpClient.get(serverUrl + '/api/v1/tasks/' + testRequest.body.id).then(response => {
             assert.strictEqual(response.status, 200);
+            assert.strictEqual(JSON.stringify(response.data), JSON.stringify(testRequest.body));
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -172,8 +169,10 @@ function apiRestPositivePostGetDeleteTaskTestRequest() {
           }
           governify.httpClient.request(options).then(response => {
             assert.strictEqual(response.status, 202);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),false);
             done();
           }).catch(err => {
+            console.log(err)
             assert.fail('Error on request');
           });
         } catch (err) {
@@ -187,7 +186,7 @@ function apiRestPositivePostGetDeleteTaskTestRequest() {
 function apiRestPositivePutTestRequest() {
   const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
   for (const testRequest of testRequests) {
-    if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.name === 'PUT task') {
+    if ( testRequest.name === 'PUT task') {
       it('should respond with 200 OK on POST (' + testRequest.name + ')', function (done) {
         try {
           const options = {
@@ -200,6 +199,7 @@ function apiRestPositivePutTestRequest() {
           }
           governify.httpClient.request(options).then(response => {
             assert.strictEqual(response.status, 200);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.bodyPOST.id + '.json'),true);
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -230,6 +230,20 @@ function apiRestPositivePutTestRequest() {
         }
       });
 
+      it('should respond with 200 OK on GET Task created with (' + testRequest.name + ') and response data should be correct', function (done) {
+        try {
+          governify.httpClient.get(serverUrl + '/api/v1/tasks/' + testRequest.bodyPUT.id).then(response => {
+            assert.strictEqual(response.status, 200);
+            assert.strictEqual(JSON.stringify(response.data), JSON.stringify(testRequest.bodyPUT));
+            done();
+          }).catch(err => {
+            assert.fail('Error on request');
+          });
+        } catch (err) {
+          assert.fail('Error when sending request');
+        }
+      });
+
       it('should respond with 200 OK on DELETE Task created with (' + testRequest.name + ')', function (done) {
         try {
           const options = {
@@ -241,6 +255,7 @@ function apiRestPositivePutTestRequest() {
           }
           governify.httpClient.request(options).then(response => {
             assert.strictEqual(response.status, 202);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.bodyPUT.id + '.json'),false);
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -251,14 +266,13 @@ function apiRestPositivePutTestRequest() {
       });
     }
   }
-
 }
 
 
 function apiRestPositiveGetStatusAndBadgeTaskTestRequest() {
   const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
   for (const testRequest of testRequests) {
-    if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.name === 'GET status and budget task') {
+    if ( testRequest.name === 'GET status and budget task') {
       it('should respond with 200 OK on POST (' + testRequest.name + ')', function (done) {
         try {
           const options = {
@@ -271,6 +285,7 @@ function apiRestPositiveGetStatusAndBadgeTaskTestRequest() {
           }
           governify.httpClient.request(options).then(response => {
             assert.strictEqual(response.status, 200);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),true);
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -299,7 +314,7 @@ function apiRestPositiveGetStatusAndBadgeTaskTestRequest() {
         try {
           governify.httpClient.get(serverUrl + '/api/v1/tasks/' + testRequest.body.id + "/status").then(response => {
             assert.strictEqual(response.status, 200);
-            assert.strictEqual(response.data.running,true)
+            assert.strictEqual(JSON.stringify(response.data), JSON.stringify(testRequest.response))
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -322,6 +337,7 @@ function apiRestPositiveGetStatusAndBadgeTaskTestRequest() {
           }
           governify.httpClient.request(options).then(response => {
             assert.strictEqual(response.status, 202);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),false);
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -332,13 +348,12 @@ function apiRestPositiveGetStatusAndBadgeTaskTestRequest() {
       });
     }
   }
-
 }
 
 function apiRestPositiveStatusActionTaskTestRequest() {
   const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
   for (const testRequest of testRequests) {
-    if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.name === 'Status Action') {
+    if ( testRequest.name === 'Status Action') {
       it('should respond with 200 OK on POST (' + testRequest.name + ')', function (done) {
         try {
           const options = {
@@ -351,6 +366,7 @@ function apiRestPositiveStatusActionTaskTestRequest() {
           }
           governify.httpClient.request(options).then(response => {
             assert.strictEqual(response.status, 200);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),true);
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -392,6 +408,7 @@ function apiRestPositiveStatusActionTaskTestRequest() {
           }
           governify.httpClient.request(options).then(response => {
             assert.strictEqual(response.status, 202);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),false);
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -408,7 +425,7 @@ function apiRestPositiveStatusActionTaskTestRequest() {
 function apiRestPositiveRunTaskTestRequest() {
   const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
   for (const testRequest of testRequests) {
-    if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.name === 'Run Task') {
+    if ( testRequest.name === 'Run Task') {
       it('should respond with 200 OK on POST (' + testRequest.name + ')', function (done) {
         try {
           const options = {
@@ -421,6 +438,7 @@ function apiRestPositiveRunTaskTestRequest() {
           }
           governify.httpClient.request(options).then(response => {
             assert.strictEqual(response.status, 200);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),true);
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -468,6 +486,7 @@ function apiRestPositiveRunTaskTestRequest() {
           }
           governify.httpClient.request(options).then(response => {
             assert.strictEqual(response.status, 202);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),false);
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -483,7 +502,7 @@ function apiRestPositiveRunTaskTestRequest() {
 function apiRestPositiveTestTaskTestRequest() {
   const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/testRequests.json')));
   for (const testRequest of testRequests) {
-    if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.name === 'Test Task') {
+    if ( testRequest.name === 'Test Task') {
       it('should respond with 200 OK on POST Test Task on (' + testRequest.name + ')', function (done) {
         try {
           const options = {
@@ -515,7 +534,7 @@ function apiRestPositiveTestTaskTestRequest() {
 function apiRestNegativePostTaskTestRequest() {
   const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/negativeTestRequests.json')));
   for (const testRequest of testRequests) {
-    if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.name === 'POST task') {
+    if ( testRequest.name === 'POST task') {
       it('should respond with 200 OK on POST (' + testRequest.name + ')', function (done) {
         try {
           const options = {
@@ -528,6 +547,7 @@ function apiRestNegativePostTaskTestRequest() {
           }
           governify.httpClient.request(options).then(response => {
             assert.strictEqual(response.status, 200);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),true);
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -551,6 +571,7 @@ function apiRestNegativePostTaskTestRequest() {
           }).catch(err => {
             assert.strictEqual(err.response.status, 400);
             assert.strictEqual(err.response.data.message, "Task already exists");
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),true);
             done();
           });
         } catch (err) {
@@ -569,6 +590,7 @@ function apiRestNegativePostTaskTestRequest() {
           }
           governify.httpClient.request(options).then(response => {
             assert.strictEqual(response.status, 202);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),false);
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -584,9 +606,10 @@ function apiRestNegativePostTaskTestRequest() {
 function apiRestNegativeGetTaskTestRequest() {
   const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/negativeTestRequests.json')));
   for (const testRequest of testRequests) {
-    if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.name === 'GET task') {
+    if ( testRequest.name === 'GET task') {
       it('should respond with 404 Not Found on GET (' + testRequest.name + ')', function (done) {
         try {
+          assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),false);
           governify.httpClient.get(serverUrl + '/api/v1/task/' + testRequest.body.id).then(response => {
           }).catch(err => {
             assert.strictEqual(err.response.status, 404);
@@ -604,7 +627,7 @@ function apiRestNegativeGetTaskTestRequest() {
 function apiRestNegativeGetTaskStatusAndBadgeTestRequest() {
   const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/negativeTestRequests.json')));
   for (const testRequest of testRequests) {
-    if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.name === 'GET status and budget task') {
+    if ( testRequest.name === 'GET status and budget task') {
 
       it('should respond with 404 Not Found on GET Task badge on (' + testRequest.name + ')', function (done) {
         try {
@@ -612,6 +635,7 @@ function apiRestNegativeGetTaskStatusAndBadgeTestRequest() {
           }).catch(err => {
             assert.strictEqual(err.response.status, 404);
             assert.strictEqual(err.response.statusText, "Not Found");
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),false);
             done();
           });
         } catch (err) {
@@ -626,6 +650,7 @@ function apiRestNegativeGetTaskStatusAndBadgeTestRequest() {
           }).catch(err => {
             assert.strictEqual(err.response.status, 404);
             assert.strictEqual(err.response.statusText, "Not Found");
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),false);
             done();
           });
         } catch (err) {
@@ -639,7 +664,7 @@ function apiRestNegativeGetTaskStatusAndBadgeTestRequest() {
 function apiRestNegativePutTaskTestRequest() {
   const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/negativeTestRequests.json')));
   for (const testRequest of testRequests) {
-    if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.name === 'PUT task') {
+    if ( testRequest.name === 'PUT task') {
       it('should respond with 404 Not Found on PUT (' + testRequest.name + ')', function (done) {
         try {
           const options = {
@@ -654,6 +679,7 @@ function apiRestNegativePutTaskTestRequest() {
           }).catch(err => {
             assert.strictEqual(err.response.status, 404);
             assert.strictEqual(err.response.statusText, "Not Found");
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),false);
             done();
           });
         } catch (err) {
@@ -667,9 +693,10 @@ function apiRestNegativePutTaskTestRequest() {
 function apiRestNegativeDeleteTaskTestRequest() {
   const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/negativeTestRequests.json')));
   for (const testRequest of testRequests) {
-    if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.name === 'DELETE task') {
+    if ( testRequest.name === 'DELETE task') {
       it('should respond with 404 Not Found on DELETE (' + testRequest.name + ')', function (done) {
         try {
+          assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),false);
           governify.httpClient.get(serverUrl + '/api/v1/task/' + testRequest.body.id).then(response => {
           }).catch(err => {
             assert.strictEqual(err.response.status, 404);
@@ -687,7 +714,7 @@ function apiRestNegativeDeleteTaskTestRequest() {
 function apiRestNegativeStatusActionTaskTestRequest() {
   const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/negativeTestRequests.json')));
   for (const testRequest of testRequests) {
-    if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.name === 'Status Action') {
+    if ( testRequest.name === 'Status Action') {
       it('should respond with 200 OK on POST (' + testRequest.name + ')', function (done) {
         try {
           const options = {
@@ -700,6 +727,7 @@ function apiRestNegativeStatusActionTaskTestRequest() {
           }
           governify.httpClient.request(options).then(response => {
             assert.strictEqual(response.status, 200);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),true);
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -720,6 +748,7 @@ function apiRestNegativeStatusActionTaskTestRequest() {
                   'User-Agent': 'request'
               }
             }
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.id + '.json'),false);
             governify.httpClient.request(options).then(response => {
             }).catch(err => {
               assert.strictEqual(err.response.status, 404);
@@ -741,6 +770,7 @@ function apiRestNegativeStatusActionTaskTestRequest() {
                   'User-Agent': 'request'
               }
             }
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),true);
             governify.httpClient.request(options).then(response => {
             }).catch(err => {
               assert.strictEqual(err.response.status, 400);
@@ -764,6 +794,7 @@ function apiRestNegativeStatusActionTaskTestRequest() {
           }
           governify.httpClient.request(options).then(response => {
             assert.strictEqual(response.status, 202);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),false);
             done();
           }).catch(err => {
             assert.fail('Error on request');
@@ -776,11 +807,10 @@ function apiRestNegativeStatusActionTaskTestRequest() {
   }
 }
 
-
 function apiRestNegativeRunTaskTestRequest() {
   const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/negativeTestRequests.json')));
   for (const testRequest of testRequests) {
-    if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.name === 'Run Task') {
+    if (testRequest.name === 'Run Task') {
       it('should respond with 404 Not Found on POST (' + testRequest.name + ')', function (done) {
         try {
           const options = {
@@ -790,11 +820,76 @@ function apiRestNegativeRunTaskTestRequest() {
                 'User-Agent': 'request'
             }
           }
+          assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),false);
           governify.httpClient.request(options).then(response => {
           }).catch(err => {
             assert.strictEqual(err.response.status, 404);
             assert.strictEqual(err.response.data.message, "Not Found");
             done();
+          });
+        } catch (err) {
+          assert.fail('Error when sending request');
+        }
+      });
+    }
+
+    if (testRequest.name === 'Bad Script Run Task') {
+      it('should respond with 200 OK on POST (' + testRequest.name + ')', function (done) {
+        try {
+          const options = {
+            method: 'POST',
+            url: serverUrl + '/api/v1/tasks',
+            data: testRequest.body,
+            headers: {
+                'User-Agent': 'request'
+            }
+          }
+          governify.httpClient.request(options).then(response => {
+            assert.strictEqual(response.status, 200);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),true);
+            done();
+          }).catch(err => {
+            assert.fail('Error on request');
+          });
+        } catch (err) {
+          assert.fail('Error when sending request');
+        }
+      });
+
+      it('should respond with 500 ERROR on POST (' + testRequest.name + ')', function (done) {
+        try {
+          const options = {
+            method: 'POST',
+            url: serverUrl + '/api/v1/tasks/' + testRequest.body.id + '/run',
+            headers: {
+                'User-Agent': 'request'
+            }
+          }
+          governify.httpClient.request(options).then(response => {
+          }).catch(err => {
+            assert.strictEqual(err.response.status, 500);
+            done();
+          });
+        } catch (err) {
+          assert.fail('Error when sending request');
+        }
+      });
+
+      it('should respond with 200 OK on DELETE Task created with (' + testRequest.name + ')', function (done) {
+        try {
+          const options = {
+            method: 'DELETE',
+            url: serverUrl + '/api/v1/tasks/' + testRequest.body.id,
+            headers: {
+                'User-Agent': 'request'
+            }
+          }
+          governify.httpClient.request(options).then(response => {
+            assert.strictEqual(response.status, 202);
+            assert.strictEqual(fs.existsSync('./tasks/' + testRequest.body.id + '.json'),false);
+            done();
+          }).catch(err => {
+            assert.fail('Error on request');
           });
         } catch (err) {
           assert.fail('Error when sending request');
@@ -807,8 +902,8 @@ function apiRestNegativeRunTaskTestRequest() {
 function apiRestNegativeTestTaskTestRequest() {
   const testRequests = JSON.parse(fs.readFileSync(path.join(__dirname, '/negativeTestRequests.json')));
   for (const testRequest of testRequests) {
-    if (((keep.length === 0 && !skip.includes(testRequest.name)) || (keep.length !== 0 && keep.includes(testRequest.name))) && testRequest.name === 'Test Task') {
-      it('should respond with 404 Not Found on POST (' + testRequest.name + ')', function (done) {
+    if ( testRequest.name === 'Test Task') {
+      it('should respond with 500 ERROR on POST (' + testRequest.name + ')', function (done) {
         try {
           const options = {
             method: 'POST',

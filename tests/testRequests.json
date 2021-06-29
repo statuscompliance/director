@@ -1,6 +1,7 @@
 [
     {
-        "name":"GET all tasks"
+        "name":"GET all tasks",
+        "response": []
     },
     {
         "name":"POST task",
@@ -45,6 +46,10 @@
             "init": "24/06/2022",
             "interval": "5000",
             "end": "24/06/2023"
+        },
+        "response": { 
+            "id": "123125",
+            "running": true 
         }
     },
     {

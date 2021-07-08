@@ -47,6 +47,7 @@ const deploy = (env, commonsMiddleware) => {
               logger.info('________________________________________________________________');
             }
           }
+          resolve();
         });
       });
 

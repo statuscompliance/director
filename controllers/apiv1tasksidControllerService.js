@@ -23,9 +23,14 @@ module.exports.deleteTask = async function deleteTask (req, res, next) {
     });
     return;
   }
-  filemanager.deleteTaskFile(req.id.value);
+  await filemanager.deleteTaskFile(req.id.value).catch(err => {
+    res.status(500).send({
+      code: 500,
+      message: 'Error when deleting task' + err
+    });
+  });
 
-  res.send({
+  res.status(202).send({
     code: 202,
     message: 'Deleted'
   });
@@ -41,7 +46,7 @@ module.exports.updateTask = async function updateTask (req, res, next) {
     return;
   }
   await filemanager.deleteTaskFile(req.id.value);
-  const newTask = req.value.task;
+  const newTask = req.task.value;
   await filemanager.addTaskFile(newTask);
   res.send({
     code: 201,

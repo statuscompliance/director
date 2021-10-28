@@ -1,3 +1,30 @@
+# [1.4.0](https://github.com/governify/director/compare/v1.3.0...v1.4.0) (2021-10-28)
+
+
+### Bug Fixes
+
+* lint ([a3465a2](https://github.com/governify/director/commit/a3465a2b5f58f7d1541bcfc4ad64524931ec5f92))
+* remove task ([ffc4840](https://github.com/governify/director/commit/ffc4840a92c1bfff856f3e138ac9b5a61a2c24b1))
+* rm collectors from external infrastructure ([0d9cfaf](https://github.com/governify/director/commit/0d9cfaf56e0b6d0d61fdc520b2910443adc20574))
+* semistandard version ([455533a](https://github.com/governify/director/commit/455533ae9c6cc63b8e084ae361624f9eb0ddbd83))
+* tasks .keep file ([875e788](https://github.com/governify/director/commit/875e788481855bfc9fcef1c22e2a9a0be1d0fde2))
+* tasks PUT ([48997b3](https://github.com/governify/director/commit/48997b32c0a226f4655138b92dd986546dad3921))
+* tasks read json only ([dd55062](https://github.com/governify/director/commit/dd550629cc9fbe43092ca02f32a07156fdb7ec69))
+
+
+### Features
+
+* commons logs ([6c65554](https://github.com/governify/director/commit/6c65554ca9d51eaf15720a627dad61b4bf703f84))
+* db backups refactor ([c04d70f](https://github.com/governify/director/commit/c04d70f65b3bcb1eec4c0c1d7a344fd9fe9950e6))
+* Default task ([c434c45](https://github.com/governify/director/commit/c434c454af95ee457648f0b9f21c7a7c2aeab66c))
+* E2E assets to develop ([acb3856](https://github.com/governify/director/commit/acb3856075421521412a1cae957908e6b35b8eaf))
+* Packages for backups ([f294093](https://github.com/governify/director/commit/f2940930a18823fea5142c07b85126ed342f903c))
+* tests of all features ([3d784ef](https://github.com/governify/director/commit/3d784ef8346cc7be1292216248a0cdec25e8a212))
+* tests of all features ([dd8f813](https://github.com/governify/director/commit/dd8f81309a4d86454f57ec0e2ed468ed2c46fd4b))
+* update commons v1.14 ([0ea2202](https://github.com/governify/director/commit/0ea2202e25872b18d6cc55040f831fcc4809cdc1))
+
+
+
 # [1.3.0](https://github.com/governify/director/compare/v1.2.0...v1.3.0) (2021-05-10)
 
 

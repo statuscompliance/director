@@ -1,6 +1,7 @@
 const mustache = require('mustache');
 mustache.escape = function (text) { return text; };
 const filemanager = require('../filemanager');
+const logger = require('governify-commons').getLogger().tag('utils');
 
 module.exports.getTaskById = async function getTaskById (id) {
   const tasks = await filemanager.readFiles(false);
@@ -17,7 +18,7 @@ module.exports.getTasksByData = async function getTaskByData (task) {
     for (const prop in task) {
       if (JSON.stringify(ex[prop]) !== JSON.stringify(task[prop])) {
         identical = false;
-        console.log('No coincide' + ex[prop] + ' - ' + task[prop]);
+        logger.info('No coincide' + ex[prop] + ' - ' + task[prop]);
       }
     }
     return identical;

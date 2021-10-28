@@ -1,0 +1,143 @@
+[
+    {
+        "name":"GET all tasks",
+        "response": []
+    },
+    {
+        "name":"POST task",
+        "body": {
+            "id": "123123",
+            "script": "test.js",
+            "running": true,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        }
+    },
+    {
+        "name":"PUT task",
+        "bodyPOST": {
+            "id": "123124",
+            "script": "test.js",
+            "running": true,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        },
+        "bodyPUT": {
+            "id": "123124",
+            "script": "test2.js",
+            "running": true,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        }
+    },
+    {
+        "name":"GET status and budget task",
+        "body": {
+            "id": "123125",
+            "script": "http://localhost:5200/api/v1/tasks",
+            "running": true,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        },
+        "response": { 
+            "id": "123125",
+            "running": true 
+        }
+    },
+    {
+        "name":"Status Action",
+        "type": "stop",
+        "body": {
+            "id": "123126",
+            "script": "test.js",
+            "running": true,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        },
+        "response": {
+            "id": "123126",
+            "script": "test.js",
+            "running": false,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        } 
+    },
+    {
+        "name":"Status Action",
+        "type": "start",
+        "body": {
+            "id": "123126",
+            "script": "test.js",
+            "running": false,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        },
+        "response": {
+            "id": "123126",
+            "script": "test.js",
+            "running": true,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        } 
+    },
+    {
+        "name":"Status Action",
+        "type": "switch",
+        "body": {
+            "id": "123126",
+            "script": "test.js",
+            "running": true,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        },
+        "response": {
+            "id": "123126",
+            "script": "test.js",
+            "running": false,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        } 
+    },
+    {
+        "name":"Run Task",
+        "body": {
+            "id": "123127",
+            "script": "http://localhost:5200/api/v1/tasks/run.js",
+            "running": true,
+            "config": {"agreementId": 123127},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        }
+    },
+    {
+        "name":"Test Task",
+        "body": {
+            "scriptText":"module.exports = { main: function(configuration) { return configuration;}};",
+            "scriptConfig": {"agreementId": 123127}
+        },
+        "response": {
+            "agreementId": 123127
+        }
+    }
+]

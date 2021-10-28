@@ -1,6 +1,7 @@
 'use strict';
 const utils = require('./utils');
 const filemanager = require('./filemanager');
+const logger = require('governify-commons').getLogger().tag('controller-tasks');
 
 module.exports.updateTaskAction = async function updateTaskAction (req, res, next) {
   const task = await utils.getTaskById(req.id.value);
@@ -40,7 +41,7 @@ module.exports.updateTaskAction = async function updateTaskAction (req, res, nex
       }
     }
     filemanager.updateTask(task);
-    console.log(task);
+    logger.info(task);
   }
 
   res.send(task);

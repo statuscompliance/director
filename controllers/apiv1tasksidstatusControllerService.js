@@ -15,7 +15,7 @@ module.exports.findTaskStatusByid = async function findTaskStatusByid (req, res,
   const response = {
     id: req.id.value,
     running: true,
-    nextExecution: Object.keys(taskExecutor.getProgrammedExecutions()[req.id.value])?.[0]
+    nextExecution: Object.keys(taskExecutor.getProgrammedTasks()?.[req.id.value] ?? [])?.[0]
   };
   res.send(response);
 };

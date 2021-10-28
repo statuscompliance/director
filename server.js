@@ -14,9 +14,11 @@ const deploy = (env, commonsMiddleware) => {
       app.use(bodyParser.json({
         strict: false
       }));
-
       app.use(cors());
-      app.use('/commons', commonsMiddleware);
+      app.use(commonsMiddleware);
+
+      const logger = require('governify-commons').getLogger().tag('controller-tasks');
+
       const oasTools = require('oas-tools');
       const jsyaml = require('js-yaml');
       const serverPort = process.env.PORT || 5800;
@@ -37,13 +39,15 @@ const deploy = (env, commonsMiddleware) => {
       oasTools.initialize(oasDoc, app, function () {
         http.createServer(app).listen(serverPort, function () {
           if (env !== 'test') {
-            console.log('App running at http://localhost:' + serverPort);
-            console.log('________________________________________________________________');
+            logger.info('________________________________________________________________');
+            logger.info('App running at http://localhost:' + serverPort);
+            logger.info('________________________________________________________________');
             if (optionsObject.docs !== false) {
-              console.log('API docs (Swagger UI) available on http://localhost:' + serverPort + '/docs');
-              console.log('________________________________________________________________');
+              logger.info('API docs (Swagger UI) available on http://localhost:' + serverPort + '/docs');
+              logger.info('________________________________________________________________');
             }
           }
+          resolve();
         });
       });
 
@@ -54,7 +58,7 @@ const deploy = (env, commonsMiddleware) => {
         });
       });
 
-      console.log('Starting task executor');
+      logger.info('Starting task executor');
       taskExecutor.startExecutor();
     } catch (err) {
       reject(err);

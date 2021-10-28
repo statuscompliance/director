@@ -32,17 +32,16 @@ jobs:
       run: npm run test
       env:
         CI: true
-# TODO - Discomment when at least one test is created
-#    - name: Generate coverage report
-#      run: npm run coverage
-#      env:
-#        CI: true    
-#    - name: Coverage to Coveralls
-#      uses: coverallsapp/github-action@master
-#      with:
-#        github-token: ${{ secrets.GITHUB_TOKEN }}
-#      env:
-#        CI: true  
+    - name: Generate coverage report
+      run: npm run coverage
+      env:
+        CI: true    
+    - name: Coverage to Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        CI: true  
   e2eTest:
     name: (develop) E2E - Checkout infrastructure, install mocha and run tests (docker-compose up, mocha tests and docker-compose down)
     needs: buildTest
@@ -54,7 +53,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         repository: governify/bluejay-infrastructure
-        ref: refs/heads/assets
+        ref: refs/heads/develop
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
@@ -79,7 +78,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         repository: governify/bluejay-infrastructure
-        ref: refs/heads/assets
+        ref: refs/heads/develop
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:

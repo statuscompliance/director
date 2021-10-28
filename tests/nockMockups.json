@@ -1,0 +1,16 @@
+[
+    {
+        "name": "GET run task",
+        "type": "GET",
+        "requestAPI": "http://localhost:5200",
+        "requestEndpoint": "/api/v1/tasks/run.js",
+        "response": "module.exports = { main: function(configuration) { return configuration;}};"
+    },
+    {
+        "name": "Negative GET run task",
+        "type": "GET",
+        "requestAPI": "http://localhost:5200",
+        "requestEndpoint": "/api/v1/tasks/badRun.js",
+        "response": "badScript"
+    }
+]

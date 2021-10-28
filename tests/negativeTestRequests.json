@@ -1,0 +1,157 @@
+[
+    {
+        "name":"POST task",
+        "body": {
+            "id": "123123",
+            "script": "test.js",
+            "running": true,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        }
+    },
+    {
+        "name":"GET task",
+        "body": {
+            "id": "123124",
+            "script": "test.js",
+            "running": true,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        }
+    },
+    {
+        "name":"GET status and budget task",
+        "body": {
+            "id": "123125",
+            "script": "test.js",
+            "running": true,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        }
+    },
+    {
+        "name":"PUT task",
+        "body": {
+            "id": "123126",
+            "script": "test.js",
+            "running": true,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        }
+    },
+    {
+        "name":"DELETE task",
+        "body": {
+            "id": "123127",
+            "script": "test.js",
+            "running": true,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        }
+    },
+    {
+        "name":"Status Action",
+        "type": "notFound",
+        "id": "123129",
+        "body": {
+            "id": "123128",
+            "script": "test.js",
+            "running": false,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        },
+        "status": 404,
+        "response": "Not Found"
+    },
+    {
+        "name":"Status Action",
+        "type": "test",
+        "id": "123129",
+        "body": {
+            "id": "123129",
+            "script": "test.js",
+            "running": false,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        },
+        "status": 400,
+        "response": "Action not permitted"
+    },
+    {
+        "name":"Status Action",
+        "type": "start",
+        "id": "123130",
+        "body": {
+            "id": "123130",
+            "script": "test.js",
+            "running": true,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        },
+        "status": 400,
+        "response": "Task already running"
+    },
+    {
+        "name":"Status Action",
+        "type": "stop",
+        "id": "123131",
+        "body": {
+            "id": "123131",
+            "script": "test.js",
+            "running": false,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        },
+        "status": 400,
+        "response": "Task is not running"
+    },
+    {
+        "name":"Run Task",
+        "body": {
+            "id": "123132",
+            "script": "test.js",
+            "running": false,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        }
+    },
+    {
+        "name":"Bad Script Run Task",
+        "body": {
+            "id": "123132",
+            "script": "http://localhost:5200/api/v1/tasks/badRun.js",
+            "running": false,
+            "config": {},
+            "init": "24/06/2022",
+            "interval": "5000",
+            "end": "24/06/2023"
+        }
+    },
+    {
+        "name":"Test Task",
+        "body": {
+            "scriptText":"badScript",
+            "scriptConfig": {"agreementId": 123127}
+        }
+    }
+]

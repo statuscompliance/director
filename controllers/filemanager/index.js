@@ -3,6 +3,7 @@ const fsPromises = fs.promises;
 const mustache = require('mustache');
 mustache.escape = function (text) { return text; };
 const taskFolder = 'tasks';
+const logger = require('governify-commons').getLogger().tag('file-manager');
 
 module.exports.updateTask = async function updateTask (task) {
   await this.deleteTaskFile(task.id);
@@ -17,14 +18,16 @@ module.exports.readFilesMap = async function readFilesMap (parsed) {
   const objects = {};
   const filenames = await fsPromises.readdir(taskFolder);
   for (const filename of filenames) {
-    const fileContent = await fsPromises.readFile(taskFolder + '/' + filename, 'utf-8');
-    let jsonObject;
-    if (parsed) {
-      jsonObject = JSON.parse(mustache.render(fileContent, process.env, {}, ['$_[', ']']));
-    } else {
-      jsonObject = JSON.parse(fileContent);
+    if (filename.endsWith('.json')) {
+      const fileContent = await fsPromises.readFile(taskFolder + '/' + filename, 'utf-8');
+      let jsonObject;
+      if (parsed) {
+        jsonObject = JSON.parse(mustache.render(fileContent, process.env, {}, ['$_[', ']']));
+      } else {
+        jsonObject = JSON.parse(fileContent);
+      }
+      objects[filename] = jsonObject;
     }
-    objects[filename] = jsonObject;
   }
 
   return objects;
@@ -35,7 +38,7 @@ module.exports.deleteTaskFile = async function deleteTaskFile (id) {
   for (const taskFileName in tasksFileMap) {
     if (tasksFileMap[taskFileName].id === id) {
       const deletedFilePath = taskFolder + '/' + taskFileName;
-      console.log('Deleting task file:' + deletedFilePath);
+      logger.info('Deleting task file:' + deletedFilePath);
       fs.unlinkSync(deletedFilePath);
       return;
     }
@@ -45,7 +48,7 @@ module.exports.deleteTaskFile = async function deleteTaskFile (id) {
 module.exports.addTaskFile = async function addTaskFile (task) {
   fs.writeFile(taskFolder + '/' + task.id + '.json', JSON.stringify(task, null, 2), function (err) {
     if (err) {
-      console.log(err);
+      logger.error(err);
     }
   });
 };

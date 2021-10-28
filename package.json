@@ -7,6 +7,7 @@
     "start": "node index.js",
     "test": "mocha ./tests/test.js --timeout 20000 -s 20",
     "coverage": "nyc --reporter=lcov mocha ./tests/test.js --timeout 20000 -s 20",
+    "cov": "nyc mocha ./tests/test.js --timeout 20000 -s 20",
     "lint": "semistandard",
     "lint-fix": "semistandard --fix",
     "precommit": "semistandard --fix && nyc mocha ./tests/test.js --timeout 20000 -s 5"
@@ -17,20 +18,27 @@
   "license": "ISC",
   "private": true,
   "dependencies": {
+    "archiver": "^5.3.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.3",
-    "governify-commons": "1.x",
+    "form-data": "^2.3.3",
+    "fs": "0.0.1-security",
+    "governify-commons": "^1.17.0",
+    "influx": "^5.9.2",
     "js-yaml": "^3.3.0",
     "mustache": "^4.0.1",
+    "node-stream-zip": "^1.15.0",
     "oas-tools": "^2.1.4",
     "require-from-string": "^2.0.2",
+    "sinon": "^11.1.1",
     "uuid": "^8.3.1"
   },
   "devDependencies": {
-    "mocha": "^7.1.1",
+    "mocha": "^7.2.0",
+    "nock": "^13.1.0",
     "nyc": "^15.0.0",
-    "semistandard": "^14.2.0"
+    "semistandard": "16.0.1"
   },
   "semistandard": {
     "ignore": [

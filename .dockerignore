@@ -8,3 +8,4 @@ node_modules
 *.cmd
 *.sh
 tests
+tasks/*

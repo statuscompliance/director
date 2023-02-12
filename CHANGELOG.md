@@ -1,3 +1,12 @@
+# [1.5.0](https://github.com/governify/director/compare/v1.4.0...v1.5.0) (2023-02-12)
+
+
+### Features
+
+* Installed newrelic ([d7435bb](https://github.com/governify/director/commit/d7435bb00244d8d8122c1dcf313a673b24ecb835))
+
+
+
 # [1.4.0](https://github.com/governify/director/compare/v1.3.0...v1.4.0) (2021-10-28)
 
 
